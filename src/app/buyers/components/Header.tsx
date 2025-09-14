@@ -20,7 +20,7 @@ export default function Header() {
       <div className="flex items-center justify-between">
         {/* Name*/}
         <div className="text-xl font-bold text-blue-700 tracking-tight">
-          Buyer Lead App
+          eSahayak Lead App
         </div>
 
         {/* Navigation Links - Center */}
