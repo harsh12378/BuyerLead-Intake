@@ -75,7 +75,7 @@ function BuyersContent() {
        ...row,
        bhk: bhkPrismaToUi[row.bhk] ?? row.bhk,
        timeline: timelinePrismaToUi[row.timeline] ?? row.timeline,
-       // optionally map tags to string if you want
+       
        tags: Array.isArray(row.tags) ? row.tags.join(", ") : ""
        }));
       setBuyers(mappedBuyers);

@@ -69,7 +69,7 @@ const buyerSchema = z.object({
 });
 
 
-// --- File Handler ---
+//File Handler
 async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
   const file = e.target.files?.[0];
   const text = await file?.text();
@@ -81,7 +81,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     complete: (results: any) => {
       const parsed = results.data as Record<string, string>[];
 
-      // --- Check headers ---
+      //Check headers
       const headers = results.meta.fields ?? [];
       const missing = CSV_HEADERS.filter(h => !headers.includes(h));
       if (missing.length) {
@@ -90,7 +90,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
         return;
       }
 
-      // --- Check row count ---
+      //Check row count
       if (parsed.length > 200) {
         setErrors([{ row: 0, messages: ['CSV has more than 200 rows. Max 200 allowed.'] }]);
         setPreviewRows([]);
@@ -103,14 +103,14 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
      parsed.forEach((row, idx) => {
   const errorsForRow: string[] = [];
 
-  // --- Normalize empty strings to undefined ---
+  //Normalize empty strings to undefined
      Object.keys(row).forEach((key) => {
         if (row[key] !== undefined && row[key] !== null && row[key].toString().trim() === "") {
           (row as any)[key] = undefined;
         }
        });
 
-  // --- Normalize bhk ---
+  //Normalize bhk
   if (row.bhk) {
     if (row.bhk === "1") row.bhk = "One";
     else if (row.bhk === "2") row.bhk = "Two";
@@ -119,7 +119,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     else if (row.bhk === "0" || row.bhk.toLowerCase() === "studio") row.bhk = "Studio";
   }
 
-  // --- Normalize timeline ---
+  // Normalize timeline
   if (row.timeline) {
     if (row.timeline === "0-3m") row.timeline = "ZeroTo3m";
     else if (row.timeline === "3-6m") row.timeline = "ThreeTo6m";
@@ -133,7 +133,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
 
   }
 
-  // --- Prepare for validation ---
+  //Prepare for validation
   const dataToValidate = {
     ...row,
   fullName: row.fullName?.trim() || undefined,
@@ -153,7 +153,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
   ownerId: user?.id,
   };
 
-  // --- Validate with Zod ---
+  // Validate with Zod 
   const result = buyerSchema.safeParse(dataToValidate);
   if (!result.success) {
     result.error.issues.forEach(err => {
@@ -161,7 +161,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     });
   }
 
-  // --- Collect errors or add valid row ---
+  // Collect errors or add valid row
   if (errorsForRow.length > 0) {
     rowErrors.push({ row: idx + 1, messages: errorsForRow });
   } else {
@@ -170,7 +170,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
 });
 
 
-      // --- Set state ---
+      //Set state
       if (rowErrors.length > 0) {
         setErrors(rowErrors);
         setPreviewRows([]);

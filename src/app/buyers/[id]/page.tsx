@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { z } from 'zod'
 import Header from '../components/Header';
 import { ProtectedRoute, useAuth } from '@/app/providers/AuthProvider';
-import { Metadata } from 'next';
+
 
 const buyerSchema = z.object({
   fullName: z.string()
