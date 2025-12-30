@@ -43,7 +43,7 @@ const bhkPrismaToUi: Record<string,string> = {
 // Separate component for the main content that uses useSearchParams
 function BuyersContent() {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const {user} = useAuth();
   const searchParams = useSearchParams();
@@ -57,34 +57,34 @@ function BuyersContent() {
   const search = searchParams.get("search") || "";
 
   // Fetch buyers from API
-  useEffect(() => {
-    const fetchBuyers = async () => {
-      setLoading(true);
+  // useEffect(() => {
+  //   const fetchBuyers = async () => {
+  //     setLoading(true);
 
-      const params = new URLSearchParams();
-      if (page) params.set("page", page.toString());
-      if (city) params.set("city", city);
-      if (propertyType) params.set("propertyType", propertyType);
-      if (status) params.set("status", status);
-      if (timeline) params.set("timeline", timeline);
-      if (search) params.set("search", search);
+  //     const params = new URLSearchParams();
+  //     if (page) params.set("page", page.toString());
+  //     if (city) params.set("city", city);
+  //     if (propertyType) params.set("propertyType", propertyType);
+  //     if (status) params.set("status", status);
+  //     if (timeline) params.set("timeline", timeline);
+  //     if (search) params.set("search", search);
 
-      const res = await fetch(`/api/buyers?${params.toString()}`);
-      const data = await res.json();
-      const mappedBuyers = data.buyers.map((row: any) => ({
-       ...row,
-       bhk: bhkPrismaToUi[row.bhk] ?? row.bhk,
-       timeline: timelinePrismaToUi[row.timeline] ?? row.timeline,
+  //     const res = await fetch(`/api/buyers?${params.toString()}`);
+  //     const data = await res.json();
+  //     const mappedBuyers = data.buyers.map((row: any) => ({
+  //      ...row,
+  //      bhk: bhkPrismaToUi[row.bhk] ?? row.bhk,
+  //      timeline: timelinePrismaToUi[row.timeline] ?? row.timeline,
        
-       tags: Array.isArray(row.tags) ? row.tags.join(", ") : ""
-       }));
-      setBuyers(mappedBuyers);
-      setTotalPages(data.pagination.totalPages);
-      setLoading(false);
-    };
+  //      tags: Array.isArray(row.tags) ? row.tags.join(", ") : ""
+  //      }));
+  //     setBuyers(mappedBuyers);
+  //     setTotalPages(data.pagination.totalPages);
+  //     setLoading(false);
+  //   };
 
-    fetchBuyers();
-  }, [page, city, propertyType, status, timeline, search]);
+  //   fetchBuyers();
+  // }, [page, city, propertyType, status, timeline, search]);
 
   // Handle page change
   const goToPage = (p: number) => {
@@ -98,7 +98,7 @@ function BuyersContent() {
   return (
     <>
       <SearchBar />
-      <div className="p-4 min-h-screen bg-blue-50">
+      <div className="flex-1 p-4 bg-blue-50">
         <div className="mb-6 p-4 rounded-lg bg-blue-600 shadow flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Leads List</h1>
         </div>
@@ -169,7 +169,7 @@ function BuyersContent() {
 // Loading component for Suspense fallback
 function BuyersLoading() {
   return (
-    <div className="p-4 min-h-screen bg-blue-50">
+    <div className="flex-1 p-4 bg-blue-50">
       <div className="mb-6 p-4 rounded-lg bg-blue-600 shadow flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Leads List</h1>
       </div>
@@ -183,10 +183,12 @@ function BuyersLoading() {
 export default function BuyersPage() {
   return (
     <ProtectedRoute>
-      <Header/>
-      <Suspense fallback={<BuyersLoading />}>
-        <BuyersContent />
-      </Suspense>
+      <div className="flex flex-col min-h-screen">
+        <Header/>
+        <Suspense fallback={<BuyersLoading />}>
+          <BuyersContent />
+        </Suspense>
+      </div>
     </ProtectedRoute>
   );
 }

@@ -220,7 +220,7 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
   }
 
   async function handleExport() {
-    // Build query string from filters if provided
+
     const qs = filters ? new URLSearchParams(filters).toString() : '';
     const url = `/api/buyers/export${qs ? `?${qs}` : ''}`;
     const res = await fetch(url);
@@ -244,7 +244,9 @@ async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
   <div className="w-full space-y-4">
     <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-3">
       <div className="flex items-center gap-2">
-        <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Import CSV (max 200 rows)</label>
+        <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+        Import CSV (max 200 rows)
+        </label>
         <input
           type="file"
           accept=".csv"
